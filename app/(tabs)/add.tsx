@@ -67,6 +67,7 @@ export default function AddBookPage() {
         <AddBookForm
           userId={session?.user?.id ?? ""}
           onSuccess={() => router.replace("/(tabs)")}
+          onScanPress={() => setMode("isbn")}
         />
       ) : (
         <ISBNSearch onBookFound={handleISBNAdd} />

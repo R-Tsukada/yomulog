@@ -11,9 +11,10 @@ import { supabase } from '../lib/supabase';
 type Props = {
   userId: string;
   onSuccess: () => void;
+  onScanPress?: () => void;
 };
 
-export default function AddBookForm({ userId, onSuccess }: Props) {
+export default function AddBookForm({ userId, onSuccess, onScanPress }: Props) {
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
   const [totalPages, setTotalPages] = useState('');
@@ -56,33 +57,65 @@ export default function AddBookForm({ userId, onSuccess }: Props) {
 
   return (
     <View className="flex-1">
+      {/* Scan Barcode Button */}
+      {onScanPress && (
+        <>
+          <TouchableOpacity
+            onPress={onScanPress}
+            className="bg-primary rounded-xl p-4 flex-row items-center justify-center gap-2 mb-6"
+            style={{ shadowColor: '#3ea8ff', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.25, shadowRadius: 12, elevation: 4 }}
+          >
+            <Text className="text-xl">📷</Text>
+            <Text className="text-white text-base font-bold">Scan Barcode</Text>
+          </TouchableOpacity>
+
+          {/* Divider */}
+          <View className="flex-row items-center gap-3 mb-6">
+            <View className="flex-1 h-px bg-border-light" />
+            <Text className="text-xs text-text-secondary font-semibold">or enter manually</Text>
+            <View className="flex-1 h-px bg-border-light" />
+          </View>
+        </>
+      )}
+
       {error ? (
         <Text className="text-sm text-danger text-center mb-4 bg-red-50 p-3 rounded-lg">
           {error}
         </Text>
       ) : null}
 
-      <TextInput
-        placeholder="Title"
-        value={title}
-        onChangeText={setTitle}
-        className="bg-bg-sub rounded-xl p-3.5 text-base mb-3"
-      />
+      <View className="mb-5">
+        <Text className="text-sm font-bold text-text-primary mb-1.5">
+          Title <Text className="text-danger">*</Text>
+        </Text>
+        <TextInput
+          placeholder="Title"
+          value={title}
+          onChangeText={setTitle}
+          className="bg-bg-sub rounded-xl p-3.5 text-base"
+        />
+      </View>
 
-      <TextInput
-        placeholder="Author"
-        value={author}
-        onChangeText={setAuthor}
-        className="bg-bg-sub rounded-xl p-3.5 text-base mb-3"
-      />
+      <View className="mb-5">
+        <Text className="text-sm font-bold text-text-primary mb-1.5">Author</Text>
+        <TextInput
+          placeholder="Author"
+          value={author}
+          onChangeText={setAuthor}
+          className="bg-bg-sub rounded-xl p-3.5 text-base"
+        />
+      </View>
 
-      <TextInput
-        placeholder="Total Pages"
-        value={totalPages}
-        onChangeText={setTotalPages}
-        keyboardType="numeric"
-        className="bg-bg-sub rounded-xl p-3.5 text-base mb-6"
-      />
+      <View className="mb-6">
+        <Text className="text-sm font-bold text-text-primary mb-1.5">Total Pages</Text>
+        <TextInput
+          placeholder="Total Pages"
+          value={totalPages}
+          onChangeText={setTotalPages}
+          keyboardType="numeric"
+          className="bg-bg-sub rounded-xl p-3.5 text-base"
+        />
+      </View>
 
       <TouchableOpacity
         onPress={handleSave}
