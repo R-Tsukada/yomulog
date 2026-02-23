@@ -1,6 +1,6 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState, useCallback } from "react";
-import { ActivityIndicator, View, ScrollView } from "react-native";
+import { ActivityIndicator, View, ScrollView, KeyboardAvoidingView, Platform } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import { supabase } from "../../lib/supabase";
 import { useAuth } from "../../hooks/useAuth";
@@ -59,20 +59,27 @@ export default function BookDetailPage() {
         title="Book Detail"
         onBack={() => router.back()}
       />
-      <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
-        <BookDetail
-          book={book}
-          userId={session?.user?.id ?? ""}
-          onBookmarkUpdate={refreshAll}
-          onEdit={() => router.push(`/book/edit/${id}`)}
-        />
-        <NoteSection
-          notes={notes}
-          bookId={id}
-          userId={session?.user?.id ?? ""}
-          onNoteAdded={refreshAll}
-        />
-      </ScrollView>
+      <KeyboardAvoidingView
+        className="flex-1"
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 10 : 0}
+      >
+        <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
+          <BookDetail
+            book={book}
+            userId={session?.user?.id ?? ""}
+            onBookmarkUpdate={refreshAll}
+            onEdit={() => router.push(`/book/edit/${id}`)}
+          />
+          <NoteSection
+            notes={notes}
+            bookId={id}
+            userId={session?.user?.id ?? ""}
+            onNoteAdded={refreshAll}
+          />
+          <View className="h-32" />
+        </ScrollView>
+      </KeyboardAvoidingView>
     </ScreenWrapper>
   );
 }
