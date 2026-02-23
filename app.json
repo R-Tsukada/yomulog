@@ -9,6 +9,21 @@
     "plugins": [
       "expo-router",
       "expo-sqlite"
-    ]
+    ],
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "ae9816bd-16de-4e31-9ceb-6b5f7ff1ec18"
+      }
+    },
+    "owner": "ryo-tsukada",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/ae9816bd-16de-4e31-9ceb-6b5f7ff1ec18"
+    },
+    "android": {},
+    "ios": {}
   }
 }
