@@ -1,9 +1,13 @@
-import { Text, View } from "react-native";
+import { useAuth } from "../../hooks/useAuth";
+import SettingsScreen from "../../components/SettingsScreen";
+import ScreenWrapper from "../../components/ScreenWrapper";
 
-export default function SettingsScreen() {
+export default function SettingsPage() {
+  const { session } = useAuth();
+
   return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text>⚙️ Settings</Text>
-    </View>
+    <ScreenWrapper>
+      <SettingsScreen email={session?.user?.email ?? ""} />
+    </ScreenWrapper>
   );
 }
