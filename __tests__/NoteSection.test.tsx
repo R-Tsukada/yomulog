@@ -17,8 +17,8 @@ const mockDelete = jest.fn();
 const mockEq = jest.fn();
 
 const mockNotes = [
-  { id: '1', page_number: 42, content: 'Great insight on refactoring', created_at: '2025-01-01T00:00:00Z' },
-  { id: '2', page_number: 108, content: 'Interesting pattern here', created_at: '2025-01-02T00:00:00Z' },
+  { id: '1', page_number: 42, content: 'Great insight on refactoring', created_at: '2025-01-01T00:00:00Z', is_bookmarked: false },
+  { id: '2', page_number: 108, content: 'Interesting pattern here', created_at: '2025-01-02T00:00:00Z', is_bookmarked: true },
 ];
 
 describe('NoteSection', () => {
@@ -190,6 +190,74 @@ describe('NoteSection', () => {
       expect(mockFrom).toHaveBeenCalledWith('reading_notes');
       expect(mockDelete).toHaveBeenCalled();
       expect(mockEq).toHaveBeenCalledWith('id', '1');
+    });
+  });
+
+  // --- Bookmark toggle tests ---
+
+  it('renders bookmark toggle button for each note', () => {
+    render(
+      <NoteSection notes={mockNotes} bookId="book-1" userId="user-1" onNoteAdded={() => {}} />
+    );
+
+    expect(screen.getAllByRole('button', { name: /bookmark/i })).toHaveLength(2);
+  });
+
+  it('calls supabase update with is_bookmarked toggled to true when pressing unbookmarked note', async () => {
+    const mockEqUserId = jest.fn().mockResolvedValue({ data: {}, error: null });
+    mockEq.mockReturnValue({ eq: mockEqUserId });
+
+    const notesWithBookmark = [
+      { ...mockNotes[0], is_bookmarked: false },
+    ];
+    render(
+      <NoteSection notes={notesWithBookmark} bookId="book-1" userId="user-1" onNoteAdded={() => {}} />
+    );
+
+    fireEvent.press(screen.getByRole('button', { name: /bookmark/i }));
+
+    await waitFor(() => {
+      expect(mockFrom).toHaveBeenCalledWith('reading_notes');
+      expect(mockUpdate).toHaveBeenCalledWith({ is_bookmarked: true });
+      expect(mockEq).toHaveBeenCalledWith('id', '1');
+      expect(mockEqUserId).toHaveBeenCalledWith('user_id', 'user-1');
+    });
+  });
+
+  it('calls supabase update with is_bookmarked toggled to false when pressing bookmarked note', async () => {
+    const mockEqUserId = jest.fn().mockResolvedValue({ data: {}, error: null });
+    mockEq.mockReturnValue({ eq: mockEqUserId });
+
+    const notesWithBookmark = [
+      { ...mockNotes[1], is_bookmarked: true },
+    ];
+    render(
+      <NoteSection notes={notesWithBookmark} bookId="book-1" userId="user-1" onNoteAdded={() => {}} />
+    );
+
+    fireEvent.press(screen.getByRole('button', { name: /bookmark/i }));
+
+    await waitFor(() => {
+      expect(mockUpdate).toHaveBeenCalledWith({ is_bookmarked: false });
+    });
+  });
+
+  it('calls onNoteAdded after toggling bookmark', async () => {
+    const mockOnNoteAdded = jest.fn();
+    const mockEqUserId = jest.fn().mockResolvedValue({ data: {}, error: null });
+    mockEq.mockReturnValue({ eq: mockEqUserId });
+
+    const notesWithBookmark = [
+      { ...mockNotes[0], is_bookmarked: false },
+    ];
+    render(
+      <NoteSection notes={notesWithBookmark} bookId="book-1" userId="user-1" onNoteAdded={mockOnNoteAdded} />
+    );
+
+    fireEvent.press(screen.getByRole('button', { name: /bookmark/i }));
+
+    await waitFor(() => {
+      expect(mockOnNoteAdded).toHaveBeenCalled();
     });
   });
 });

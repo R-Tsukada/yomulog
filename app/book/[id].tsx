@@ -6,6 +6,7 @@ import { supabase } from "../../lib/supabase";
 import { useAuth } from "../../hooks/useAuth";
 import BookDetail from "../../components/BookDetail";
 import NoteSection from "../../components/NoteSection";
+import AISummarySection from "../../components/AISummarySection";
 import ScreenWrapper from "../../components/ScreenWrapper";
 import ScreenHeader from "../../components/ScreenHeader";
 
@@ -76,6 +77,11 @@ export default function BookDetailPage() {
             bookId={id}
             userId={session?.user?.id ?? ""}
             onNoteAdded={refreshAll}
+          />
+          <AISummarySection
+            bookId={id}
+            userId={session?.user?.id ?? ""}
+            notesCount={notes.length}
           />
           <View className="h-32" />
         </ScrollView>

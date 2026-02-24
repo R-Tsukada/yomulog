@@ -14,6 +14,7 @@ type Note = {
   page_number: number;
   content: string;
   created_at: string;
+  is_bookmarked?: boolean;
 };
 
 type Props = {
@@ -93,6 +94,15 @@ export default function NoteSection({ notes, bookId, userId, onNoteAdded }: Prop
     setEditingId(null);
     setEditContent('');
     setEditPage('');
+  };
+
+  const handleToggleBookmark = async (noteId: string, current: boolean) => {
+    await supabase
+      .from('reading_notes')
+      .update({ is_bookmarked: !current })
+      .eq('id', noteId)
+      .eq('user_id', userId);
+    onNoteAdded();
   };
 
   const handleDeleteConfirm = async (id: string) => {
@@ -238,7 +248,16 @@ export default function NoteSection({ notes, bookId, userId, onNoteAdded }: Prop
                     p.{item.page_number}
                   </Text>
                   <Text className="text-sm text-text-primary mb-2">{item.content}</Text>
-                  <View className="flex-row gap-2 justify-end">
+                  <View className="flex-row gap-2 justify-end items-center">
+                    <TouchableOpacity
+                      onPress={() => handleToggleBookmark(item.id, item.is_bookmarked ?? false)}
+                      accessibilityRole="button"
+                      accessibilityLabel={item.is_bookmarked ? 'Remove bookmark' : 'Bookmark note'}
+                    >
+                      <Text className={`text-xs font-medium ${item.is_bookmarked ? 'text-primary' : 'text-text-secondary'}`}>
+                        {item.is_bookmarked ? '★' : '☆'}
+                      </Text>
+                    </TouchableOpacity>
                     <TouchableOpacity onPress={() => handleEdit(item)}>
                       <Text className="text-xs text-primary font-medium">Edit</Text>
                     </TouchableOpacity>
