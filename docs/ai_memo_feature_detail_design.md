@@ -652,28 +652,22 @@ Deno.serve(async (req: Request) => {
   // 6. 文字数上限の適用
   const trimmedNotes = trimNotes(notes, CHAR_LIMIT);
 
-  // 7. 排他制御チェック（is_processing フラグ）
-  const { data: existing } = await supabase
+  // 7. アトミックなロック取得（is_processing フラグ）
+  // [レビュー修正] TOCTOU 競合を解消するため、SELECT→判定→UPDATE ではなく
+  // 「条件付き UPDATE でロック取得」→「行なしなら INSERT」の2ステップに変更
+
+  // ステップ1: is_processing が false/null の場合のみ UPDATE でアトミックにロック取得
+  const { data: locked } = await supabase
     .from('book_summaries')
-    .select('is_processing')
+    .update({ is_processing: true, is_error: false })
     .eq('book_id', bookId)
     .eq('user_id', user.id)
+    .or('is_processing.is.null,is_processing.eq.false')
+    .select()
     .maybeSingle();
 
-  if (existing?.is_processing) {
-    return errorResponse(409, 'processing_in_progress');
-  }
-
-  // 8. is_processing=true にして処理開始
-  // [レビュー修正] INSERT/UPDATE を使い分け、再生成時に既存データを上書きしない
-  if (existing) {
-    // 再生成の場合：既存の summary/learnings/quotes を保持したまま is_processing だけ更新
-    await supabase.from('book_summaries')
-      .update({ is_processing: true, is_error: false })
-      .eq('book_id', bookId)
-      .eq('user_id', user.id);
-  } else {
-    // 初回生成：新規 INSERT
+  if (!locked) {
+    // ステップ2: レコードが存在しない場合は INSERT を試みる
     const { error: insertError } = await supabase.from('book_summaries').insert({
       book_id:        bookId,
       user_id:        user.id,
@@ -685,6 +679,10 @@ Deno.serve(async (req: Request) => {
       detected_lang:  'ja',
       prompt_version: PROMPT_VERSION,
     });
+    if (insertError?.code === '23505') {
+      // ユニーク制約違反 = 別リクエストが先にロック取得済み
+      return errorResponse(409, 'processing_in_progress');
+    }
     if (insertError) {
       console.error('[summarize-memos] Failed to insert book_summary:', insertError);
       return errorResponse(500, 'db_error');
@@ -838,11 +836,12 @@ async function callSummarizeMemos(bookId: string): Promise<BookSummary> {
 }
 
 // [レビュー追加] コンポーネントマウント時に既存サマリーを取得
-async function fetchExistingSummary(bookId: string): Promise<BookSummary | null> {
+async function fetchExistingSummary(bookId: string, userId: string): Promise<BookSummary | null> {
   const { data } = await supabase
     .from('book_summaries')
     .select('summary, learnings, quotes, detected_lang, prompt_version, token_count, updated_at')
     .eq('book_id', bookId)
+    .eq('user_id', userId)
     .maybeSingle();
 
   if (!data || data.is_processing) return null;

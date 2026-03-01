@@ -32,7 +32,6 @@ type Props = {
   notesCount: number;
 };
 
-const SUPABASE_URL = process.env.EXPO_PUBLIC_SUPABASE_URL!;
 const FETCH_TIMEOUT_MS = 30000;
 
 async function fetchExistingSummary(bookId: string, userId: string): Promise<BookSummary | null> {
@@ -57,6 +56,9 @@ async function fetchExistingSummary(bookId: string, userId: string): Promise<Boo
 }
 
 async function callSummarizeMemos(bookId: string): Promise<BookSummary> {
+  const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL;
+  if (!supabaseUrl) throw new Error('SUPABASE_URL not configured');
+
   const { data: { session } } = await supabase.auth.getSession();
   if (!session) throw new Error('unauthorized');
 
@@ -64,7 +66,7 @@ async function callSummarizeMemos(bookId: string): Promise<BookSummary> {
   const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
 
   try {
-    const res = await fetch(`${SUPABASE_URL}/functions/v1/summarize-memos`, {
+    const res = await fetch(`${supabaseUrl}/functions/v1/summarize-memos`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -97,6 +99,9 @@ export default function AISummarySection({ bookId, userId, notesCount }: Props) 
       } else {
         setState({ status: 'idle' });
       }
+    }).catch((err) => {
+      console.error('Failed to fetch existing summary:', err);
+      setState({ status: 'idle' });
     });
   }, [bookId, userId]);
 

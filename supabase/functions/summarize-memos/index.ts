@@ -216,9 +216,16 @@ Deno.serve(async (req: Request) => {
   const jwt = req.headers.get('Authorization')?.replace('Bearer ', '');
   if (!jwt) return errorResponse(401, 'unauthorized');
 
+  const supabaseUrl     = Deno.env.get('SUPABASE_URL');
+  const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY');
+  if (!supabaseUrl || !supabaseAnonKey) {
+    console.error('[summarize-memos] SUPABASE_URL or SUPABASE_ANON_KEY is not set');
+    return errorResponse(500, 'internal_error');
+  }
+
   const supabase = createClient(
-    Deno.env.get('SUPABASE_URL')!,
-    Deno.env.get('SUPABASE_ANON_KEY')!,
+    supabaseUrl,
+    supabaseAnonKey,
     { global: { headers: { Authorization: `Bearer ${jwt}` } } }
   );
 
@@ -347,10 +354,13 @@ Deno.serve(async (req: Request) => {
     }
 
     // 12. last_summarized_at 更新（レート制限用）
-    await supabase.from('books')
+    const { error: updateRateLimitError } = await supabase.from('books')
       .update({ last_summarized_at: new Date().toISOString() })
       .eq('id', bookId)
       .eq('user_id', user.id);
+    if (updateRateLimitError) {
+      console.warn('[summarize-memos] Failed to update last_summarized_at:', updateRateLimitError);
+    }
 
     return new Response(JSON.stringify({
       summary:       result.summary,
