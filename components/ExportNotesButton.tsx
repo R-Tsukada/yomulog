@@ -52,7 +52,8 @@ export default function ExportNotesButton({ book, notes }: Props) {
 
   const hasNotes = notes.length > 0;
   const bookmarkedNotes = notes.filter(n => n.is_bookmarked);
-  const exportNotes = bookmarkedNotes.length > 0 ? bookmarkedNotes : notes;
+  const selectedNotes = bookmarkedNotes.length > 0 ? bookmarkedNotes : notes;
+  const exportNotes = [...selectedNotes].sort((a, b) => a.page_number - b.page_number);
 
   const handleExport = async () => {
     setLoading(true);
