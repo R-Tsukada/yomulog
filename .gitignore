@@ -40,4 +40,10 @@ yarn-error.*
 /ios
 /android
 .env
-.env
+
+# Claude Code
+.claude/
+
+# Supabase CLI (local)
+supabase/.branches/
+supabase/.temp/

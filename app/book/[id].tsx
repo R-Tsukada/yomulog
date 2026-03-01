@@ -6,6 +6,8 @@ import { supabase } from "../../lib/supabase";
 import { useAuth } from "../../hooks/useAuth";
 import BookDetail from "../../components/BookDetail";
 import NoteSection from "../../components/NoteSection";
+import AISummarySection from "../../components/AISummarySection";
+import ExportNotesButton from "../../components/ExportNotesButton";
 import ScreenWrapper from "../../components/ScreenWrapper";
 import ScreenHeader from "../../components/ScreenHeader";
 
@@ -77,6 +79,15 @@ export default function BookDetailPage() {
             userId={session?.user?.id ?? ""}
             onNoteAdded={refreshAll}
           />
+          {/* AISummarySection is hidden until Supabase Pro Plan is available.
+              Edge Functions on the free plan have a 2s timeout, which is too short
+              for the Gemini API call. Re-enable when upgrading to Pro Plan.
+          <AISummarySection
+            bookId={id}
+            userId={session?.user?.id ?? ""}
+            notesCount={notes.length}
+          /> */}
+          <ExportNotesButton book={book} notes={notes} />
           <View className="h-32" />
         </ScrollView>
       </KeyboardAvoidingView>
