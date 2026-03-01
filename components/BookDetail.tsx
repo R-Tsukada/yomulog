@@ -17,6 +17,7 @@ type Book = {
   current_page: number;
   status: string;
   cover_url?: string | null;
+  finished_at?: string | null;
 };
 
 type Props = {
@@ -66,9 +67,17 @@ export default function BookDetail({ book, userId, onBookmarkUpdate, onEdit }: P
         ? 'reading'
         : 'unread';
 
+    const updatePayload: Record<string, unknown> = {
+      current_page: clamped,
+      status: newStatus,
+    };
+    if (newStatus === 'finished' && !book.finished_at) {
+      updatePayload.finished_at = new Date().toISOString();
+    }
+
     await supabase
       .from('books')
-      .update({ current_page: clamped, status: newStatus })
+      .update(updatePayload)
       .eq('id', book.id);
 
     setLoading(false);
