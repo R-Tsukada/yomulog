@@ -38,7 +38,7 @@ npx jest __tests__/BookDetail.test.tsx
 
 ### Routing (Expo Router)
 
-```
+```text
 app/
   _layout.tsx          # Root layout — handles auth redirect logic
   (auth)/
@@ -87,7 +87,7 @@ Tests live in `__tests__/`. The Supabase client is mocked at `__mocks__/supabase
 ## Environment Variables
 
 Create a `.env` file at the root:
-```
+```env
 EXPO_PUBLIC_SUPABASE_URL=...
 EXPO_PUBLIC_SUPABASE_ANON_KEY=...
 ```

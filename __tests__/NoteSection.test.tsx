@@ -260,4 +260,24 @@ describe('NoteSection', () => {
       expect(mockOnNoteAdded).toHaveBeenCalled();
     });
   });
+
+  it('shows error message and does not call onNoteAdded when bookmark toggle fails', async () => {
+    const mockOnNoteAdded = jest.fn();
+    const mockEqUserId = jest.fn().mockResolvedValue({ data: null, error: { message: 'Network error' } });
+    mockEq.mockReturnValue({ eq: mockEqUserId });
+
+    const notesWithBookmark = [
+      { ...mockNotes[0], is_bookmarked: false },
+    ];
+    render(
+      <NoteSection notes={notesWithBookmark} bookId="book-1" userId="user-1" onNoteAdded={mockOnNoteAdded} />
+    );
+
+    fireEvent.press(screen.getByRole('button', { name: /bookmark/i }));
+
+    await waitFor(() => {
+      expect(screen.getByText('Network error')).toBeTruthy();
+      expect(mockOnNoteAdded).not.toHaveBeenCalled();
+    });
+  });
 });

@@ -20,10 +20,11 @@ const mockGetSession = supabase.auth.getSession as jest.Mock;
 
 function setupFetchSummaryMock(data: object | null) {
   const mockMaybeSingle = jest.fn().mockResolvedValue({ data, error: null });
-  const mockEqBookId = jest.fn().mockReturnValue({ maybeSingle: mockMaybeSingle });
+  const mockEqUserId = jest.fn().mockReturnValue({ maybeSingle: mockMaybeSingle });
+  const mockEqBookId = jest.fn().mockReturnValue({ eq: mockEqUserId });
   const mockSelect = jest.fn().mockReturnValue({ eq: mockEqBookId });
   mockFrom.mockReturnValue({ select: mockSelect });
-  return { mockMaybeSingle, mockEqBookId, mockSelect };
+  return { mockMaybeSingle, mockEqBookId, mockEqUserId, mockSelect };
 }
 
 const mockSummaryData = {
@@ -56,6 +57,16 @@ describe('AISummarySection', () => {
         tokenCount: 500,
         createdAt: '2026-02-23T00:00:00Z',
       }),
+    });
+  });
+
+  // 0. fetchExistingSummary が user_id でフィルタしているか確認
+  it('filters fetchExistingSummary by user_id', async () => {
+    const { mockEqUserId } = setupFetchSummaryMock(null);
+    render(<AISummarySection bookId="book-1" userId="user-1" notesCount={5} />);
+
+    await waitFor(() => {
+      expect(mockEqUserId).toHaveBeenCalledWith('user_id', 'user-1');
     });
   });
 

@@ -178,7 +178,16 @@ async function callGeminiFlash(systemPrompt: string, userPrompt: string) {
 
     const parsed = safeParseGeminiResponse(rawText);
     if (!parsed) {
-      console.error('[summarize-memos] Parse failed. rawText:', rawText.slice(0, 200));
+      const encoder = new TextEncoder();
+      const hashBuffer = await crypto.subtle.digest('SHA-256', encoder.encode(rawText));
+      const hashHex = Array.from(new Uint8Array(hashBuffer))
+        .map(b => b.toString(16).padStart(2, '0'))
+        .join('');
+      console.error('[summarize-memos] Parse failed.', {
+        length: rawText.length,
+        tokenCount,
+        hash: hashHex,
+      });
       throw new Error('Failed to parse Gemini response');
     }
 
@@ -271,25 +280,19 @@ Deno.serve(async (req: Request) => {
   // 6. 文字数上限の適用
   const trimmedNotes = trimNotes(notes, CHAR_LIMIT);
 
-  // 7. 排他制御チェック（is_processing フラグ）
-  const { data: existing } = await supabase
+  // 7. アトミックなロック取得（is_processing フラグ）
+  // ステップ1: is_processing が false/null の場合のみ UPDATE でロック取得
+  const { data: locked } = await supabase
     .from('book_summaries')
-    .select('is_processing')
+    .update({ is_processing: true, is_error: false })
     .eq('book_id', bookId)
     .eq('user_id', user.id)
+    .or('is_processing.is.null,is_processing.eq.false')
+    .select()
     .maybeSingle();
 
-  if (existing?.is_processing) {
-    return errorResponse(409, 'processing_in_progress');
-  }
-
-  // 8. is_processing=true にして処理開始
-  if (existing) {
-    await supabase.from('book_summaries')
-      .update({ is_processing: true, is_error: false })
-      .eq('book_id', bookId)
-      .eq('user_id', user.id);
-  } else {
+  if (!locked) {
+    // ステップ2: レコードが存在しない場合は INSERT を試みる
     const { error: insertError } = await supabase.from('book_summaries').insert({
       book_id:        bookId,
       user_id:        user.id,
@@ -301,6 +304,10 @@ Deno.serve(async (req: Request) => {
       detected_lang:  'ja',
       prompt_version: PROMPT_VERSION,
     });
+    if (insertError?.code === '23505') {
+      // ユニーク制約違反 = 別リクエストが先にロック取得済み
+      return errorResponse(409, 'processing_in_progress');
+    }
     if (insertError) {
       console.error('[summarize-memos] Failed to insert book_summary:', insertError);
       return errorResponse(500, 'db_error');

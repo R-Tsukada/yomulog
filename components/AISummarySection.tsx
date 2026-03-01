@@ -35,11 +35,12 @@ type Props = {
 const SUPABASE_URL = process.env.EXPO_PUBLIC_SUPABASE_URL!;
 const FETCH_TIMEOUT_MS = 30000;
 
-async function fetchExistingSummary(bookId: string): Promise<BookSummary | null> {
+async function fetchExistingSummary(bookId: string, userId: string): Promise<BookSummary | null> {
   const { data } = await supabase
     .from('book_summaries')
     .select('summary, learnings, quotes, detected_lang, prompt_version, token_count, updated_at, is_processing')
     .eq('book_id', bookId)
+    .eq('user_id', userId)
     .maybeSingle();
 
   if (!data || data.is_processing) return null;
@@ -86,18 +87,18 @@ async function callSummarizeMemos(bookId: string): Promise<BookSummary> {
   }
 }
 
-export default function AISummarySection({ bookId, notesCount }: Props) {
+export default function AISummarySection({ bookId, userId, notesCount }: Props) {
   const [state, setState] = useState<SummaryState>({ status: 'loading_existing' });
 
   useEffect(() => {
-    fetchExistingSummary(bookId).then((data) => {
+    fetchExistingSummary(bookId, userId).then((data) => {
       if (data) {
         setState({ status: 'success', data });
       } else {
         setState({ status: 'idle' });
       }
     });
-  }, [bookId]);
+  }, [bookId, userId]);
 
   const handleGenerate = async () => {
     setState({ status: 'loading' });

@@ -97,12 +97,16 @@ export default function NoteSection({ notes, bookId, userId, onNoteAdded }: Prop
   };
 
   const handleToggleBookmark = async (noteId: string, current: boolean) => {
-    await supabase
+    const { error: toggleError } = await supabase
       .from('reading_notes')
       .update({ is_bookmarked: !current })
       .eq('id', noteId)
       .eq('user_id', userId);
-    onNoteAdded();
+    if (toggleError) {
+      setError(toggleError.message);
+    } else {
+      onNoteAdded();
+    }
   };
 
   const handleDeleteConfirm = async (id: string) => {

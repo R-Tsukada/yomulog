@@ -37,7 +37,7 @@ YomuLogのAIメモ整理機能。読書中に `reading_notes` テーブルに記
 
 ### 2.1 全体構成
 
-```
+```text
 React Native (YomuLog)
   └─ BookDetail画面
        └─ 「AIで整理する」ボタン
@@ -277,7 +277,7 @@ SELECT cron.schedule(
 
 ### 3.3 テーブル全体の関連図
 
-```
+```text
 auth.users
     │
     ├─ books (user_id)
@@ -294,7 +294,7 @@ auth.users
 
 ### 4.1 ファイル配置
 
-```
+```text
 supabase/
   functions/
     summarize-memos/
@@ -861,7 +861,7 @@ async function fetchExistingSummary(bookId: string): Promise<BookSummary | null>
 
 ### 5.4 コンポーネント概要
 
-```
+```text
 AISummarySection
   ├─ 初期表示（useEffect）: book_summaries から既存サマリーを取得
   │    └─ 存在すれば status='success' で即座に表示
@@ -920,7 +920,7 @@ Supabase が自動提供するシークレット（設定不要）:
 ### 6.2 React Native（クライアント）環境変数
 
 `.env` ファイルに設定済みのものを利用する（新規追加不要）:
-```
+```bash
 EXPO_PUBLIC_SUPABASE_URL=...
 EXPO_PUBLIC_SUPABASE_ANON_KEY=...
 ```
