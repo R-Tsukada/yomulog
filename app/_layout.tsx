@@ -29,6 +29,7 @@ export default function RootLayout() {
 
   // ユーザーログイン時に RevenueCat とユーザー ID を紐付け
   useEffect(() => {
+    if (!Purchases.isConfigured) return;
     if (session?.user?.id) {
       Purchases.logIn(session.user.id).catch((err) => {
         console.warn('[RevenueCat] logIn failed:', err);
