@@ -1,4 +1,4 @@
-import { renderHook, waitFor } from '@testing-library/react-native';
+import { renderHook, waitFor, act } from '@testing-library/react-native';
 
 // jest.mock はホイストされるため、factory 内で jest.fn() を直接定義する
 jest.mock('react-native-purchases', () => ({
@@ -134,6 +134,32 @@ describe('useSubscription', () => {
 
     await waitFor(() => {
       expect(mockAddCustomerInfoUpdateListener).toHaveBeenCalled();
+    });
+  });
+
+  it('syncs to Supabase when listener receives a customer info update', async () => {
+    let capturedListener: ((info: unknown) => void) | undefined;
+    mockAddCustomerInfoUpdateListener.mockImplementation((cb) => {
+      capturedListener = cb;
+      return { remove: jest.fn() };
+    });
+
+    mockGetCustomerInfo.mockResolvedValue(activeCustomerInfo);
+    const mockUpsert = setupUpsertMock();
+
+    const { result } = renderHook(() => useSubscription());
+    await waitFor(() => expect(result.current.isLoading).toBe(false));
+
+    const callsBefore = mockUpsert.mock.calls.length;
+
+    act(() => capturedListener!(inactiveCustomerInfo));
+
+    await waitFor(() => {
+      expect(mockUpsert.mock.calls.length).toBeGreaterThan(callsBefore);
+      expect(mockUpsert).toHaveBeenLastCalledWith(
+        expect.objectContaining({ user_id: 'user-123', is_subscribed: false }),
+        expect.objectContaining({ onConflict: 'user_id' })
+      );
     });
   });
 

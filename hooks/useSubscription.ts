@@ -14,6 +14,19 @@ export function useSubscription() {
   const { session } = useAuth();
   const [state, setState] = useState<SubscriptionStatus>({ status: 'loading' });
 
+  // Supabase の user_profiles に同期（バックグラウンドで実施、失敗しても無視）
+  const syncToSupabase = (isActive: boolean) => {
+    if (!session?.user?.id) return;
+    supabase.from('user_profiles').upsert(
+      { user_id: session.user.id, is_subscribed: isActive },
+      { onConflict: 'user_id' }
+    ).then(({ error }) => {
+      if (error) {
+        console.warn('[useSubscription] Failed to sync to Supabase:', error);
+      }
+    });
+  };
+
   const checkSubscription = async () => {
     if (!session?.user?.id) {
       setState({ status: 'not_subscribed' });
@@ -25,16 +38,7 @@ export function useSubscription() {
       const customerInfo = await Purchases.getCustomerInfo();
       const isActive = !!customerInfo.entitlements.active[PREMIUM_ENTITLEMENT_ID];
 
-      // Supabase の user_profiles に同期（バックグラウンドで実施、失敗しても無視）
-      supabase.from('user_profiles').upsert(
-        { user_id: session.user.id, is_subscribed: isActive },
-        { onConflict: 'user_id' }
-      ).then(({ error }) => {
-        if (error) {
-          console.warn('[useSubscription] Failed to sync to Supabase:', error);
-        }
-      });
-
+      syncToSupabase(isActive);
       setState({ status: isActive ? 'subscribed' : 'not_subscribed' });
     } catch (err) {
       console.warn('[useSubscription] RevenueCat error, falling back to Supabase:', err);
@@ -69,6 +73,7 @@ export function useSubscription() {
     const listener = Purchases.addCustomerInfoUpdateListener((customerInfo) => {
       const isActive = !!customerInfo.entitlements.active[PREMIUM_ENTITLEMENT_ID];
       setState({ status: isActive ? 'subscribed' : 'not_subscribed' });
+      syncToSupabase(isActive);
     });
 
     return () => {
