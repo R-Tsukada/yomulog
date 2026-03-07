@@ -135,10 +135,14 @@ export default function BookList({ books, onBookPress }: Props) {
           )}
         </View>
       ) : (
+        <View className="bg-bg-sub rounded-xl overflow-hidden mt-2">
         <FlatList
           data={filteredBooks}
           keyExtractor={(item) => item.id}
           showsVerticalScrollIndicator={false}
+          ItemSeparatorComponent={() => (
+            <View className="border-b border-border-light" />
+          )}
           renderItem={({ item }) => {
             const pct =
               item.total_pages > 0
@@ -148,7 +152,7 @@ export default function BookList({ books, onBookPress }: Props) {
             return (
               <TouchableOpacity
                 onPress={() => onBookPress(item.id)}
-                className="bg-bg-sub rounded-xl p-4 mb-3 flex-row"
+                className="flex-row p-4"
               >
                 {/* Cover Image */}
                 {item.cover_url ? (
@@ -251,6 +255,7 @@ export default function BookList({ books, onBookPress }: Props) {
             );
           }}
         />
+        </View>
       )}
     </View>
   );
