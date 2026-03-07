@@ -1,4 +1,5 @@
-// Mock Supabase client for testing
+// Manual mock for lib/supabase.ts
+// Jest resolves this file when jest.mock('../lib/supabase') is called without a factory.
 export const mockSignUp = jest.fn();
 export const mockSignInWithPassword = jest.fn();
 export const mockSignOut = jest.fn();

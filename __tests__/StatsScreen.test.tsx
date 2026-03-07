@@ -9,11 +9,7 @@ jest.mock('../hooks/useAuth', () => ({
   useAuth: jest.fn(),
 }));
 
-jest.mock('../lib/supabase', () => ({
-  supabase: {
-    from: jest.fn(),
-  },
-}));
+jest.mock('../lib/supabase');
 
 // react-native-purchases のモック（_layout.tsx 経由で参照されるケースに備えて）
 jest.mock('react-native-purchases', () => ({
@@ -26,12 +22,11 @@ jest.mock('react-native-purchases', () => ({
 
 import { useSubscription } from '../hooks/useSubscription';
 import { useAuth } from '../hooks/useAuth';
-import { supabase } from '../lib/supabase';
+import { mockFrom } from '../lib/supabase';
 import StatsScreen from '../app/(tabs)/stats';
 
 const mockUseSubscription = useSubscription as jest.Mock;
 const mockUseAuth         = useAuth as jest.Mock;
-const mockFrom            = supabase.from as jest.Mock;
 
 const mockSession = { user: { id: 'user-123' } };
 
