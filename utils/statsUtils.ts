@@ -28,8 +28,8 @@ export function aggregateByYear(books: FinishedBook[], year: number): YearlyStat
 
   for (const book of books) {
     const date = new Date(book.finished_at);
-    if (date.getFullYear() !== year) continue;
-    const monthIndex = date.getMonth();
+    if (date.getUTCFullYear() !== year) continue;
+    const monthIndex = date.getUTCMonth();
     monthly[monthIndex].count += 1;
     monthly[monthIndex].pages += book.total_pages;
     totalCount += 1;
@@ -44,7 +44,7 @@ export function getAvailableYears(books: FinishedBook[], currentYear: number): n
 
   const years = books
     .filter(b => b.finished_at)
-    .map(b => new Date(b.finished_at).getFullYear());
+    .map(b => new Date(b.finished_at).getUTCFullYear());
 
   const minYear = Math.min(...years);
   const result: number[] = [];
