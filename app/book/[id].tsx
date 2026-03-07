@@ -55,7 +55,15 @@ export default function BookDetailPage() {
 
   return (
     <View className="flex-1 bg-bg-main px-6">
-      <Stack.Screen options={{ title: 'Book Detail' }} />
+      <Stack.Screen options={{
+        title: 'Book Detail',
+        headerShown: true,
+        headerStyle: { backgroundColor: '#ffffff' },
+        headerTintColor: '#3ea8ff',
+        headerTitleStyle: { fontWeight: '600', color: '#1a1a2e' },
+        headerShadowVisible: false,
+        headerBackTitle: 'Back',
+      }} />
       <KeyboardAvoidingView
         className="flex-1"
         behavior={Platform.OS === "ios" ? "padding" : "height"}

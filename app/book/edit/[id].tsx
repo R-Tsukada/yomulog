@@ -34,7 +34,15 @@ export default function EditBookPage() {
 
   return (
     <View className="flex-1 bg-bg-main px-6">
-      <Stack.Screen options={{ title: 'Edit Book' }} />
+      <Stack.Screen options={{
+        title: 'Edit Book',
+        headerShown: true,
+        headerStyle: { backgroundColor: '#ffffff' },
+        headerTintColor: '#3ea8ff',
+        headerTitleStyle: { fontWeight: '600', color: '#1a1a2e' },
+        headerShadowVisible: false,
+        headerBackTitle: 'Back',
+      }} />
       <EditBookForm
         book={book}
         onSuccess={() => router.back()}
