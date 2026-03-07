@@ -81,7 +81,7 @@ describe('StatsScreen', () => {
     setupBooksQueryMock([]);
 
     render(<StatsScreen />);
-    expect(screen.getByRole('button', { name: /購読する/i })).toBeTruthy();
+    expect(screen.getByRole('button', { name: /subscribe/i })).toBeTruthy();
   });
 
   it('shows restore purchases button in paywall', () => {
@@ -89,7 +89,7 @@ describe('StatsScreen', () => {
     setupBooksQueryMock([]);
 
     render(<StatsScreen />);
-    expect(screen.getByRole('button', { name: /購入を復元/i })).toBeTruthy();
+    expect(screen.getByRole('button', { name: /restore/i })).toBeTruthy();
   });
 
   // --- Stats コンテンツ ---
@@ -109,7 +109,7 @@ describe('StatsScreen', () => {
 
     render(<StatsScreen />);
     await waitFor(() => {
-      expect(screen.getByText('2冊')).toBeTruthy();
+      expect(screen.getByText('2')).toBeTruthy();
     });
   });
 
@@ -149,7 +149,7 @@ describe('StatsScreen', () => {
 
     render(<StatsScreen />);
     await waitFor(() => {
-      expect(screen.getByText('0冊')).toBeTruthy();
+      expect(screen.getByText('0')).toBeTruthy();
     });
   });
 
