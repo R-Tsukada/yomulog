@@ -170,11 +170,50 @@ describe('BookDetail', () => {
 
     await waitFor(() => {
       expect(mockFrom).toHaveBeenCalledWith('books');
-      expect(mockUpdate).toHaveBeenCalledWith({
-        current_page: 464,
-        status: 'finished',
-      });
+      expect(mockUpdate).toHaveBeenCalledWith(
+        expect.objectContaining({
+          current_page: 464,
+          status: 'finished',
+        })
+      );
       expect(mockEq).toHaveBeenCalledWith('id', '1');
+    });
+  });
+
+  // --- Test: sets finished_at when status becomes finished ---
+  it('sets finished_at when status becomes finished', async () => {
+    const almostDoneBook = { ...mockBook, current_page: 460, total_pages: 464 };
+    render(<BookDetail book={almostDoneBook} userId="user-1" onBookmarkUpdate={() => {}} />);
+
+    fireEvent.press(screen.getByText('+5'));
+
+    await waitFor(() => {
+      expect(mockUpdate).toHaveBeenCalledWith(
+        expect.objectContaining({
+          finished_at: expect.any(String),
+        })
+      );
+    });
+  });
+
+  // --- Test: does not overwrite finished_at if already set ---
+  it('does not overwrite finished_at if already set', async () => {
+    const alreadyFinishedBook = {
+      ...mockBook,
+      current_page: 460,
+      total_pages: 464,
+      finished_at: '2025-01-01T00:00:00Z',
+    };
+    render(<BookDetail book={alreadyFinishedBook} userId="user-1" onBookmarkUpdate={() => {}} />);
+
+    fireEvent.press(screen.getByText('+5'));
+
+    await waitFor(() => {
+      expect(mockUpdate).toHaveBeenCalledWith(
+        expect.not.objectContaining({
+          finished_at: expect.any(String),
+        })
+      );
     });
   });
 });

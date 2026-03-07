@@ -92,6 +92,13 @@ EXPO_PUBLIC_SUPABASE_URL=...
 EXPO_PUBLIC_SUPABASE_ANON_KEY=...
 ```
 
+## UI Language Policy
+
+- **All UI text must be in English** (targeting international users, not Japan-only)
+- Japanese text in UI is a bug — fix it when found
+- Future plan: allow users to choose language (English / Japanese) after account registration
+- This applies to: labels, buttons, alerts, placeholders, error messages, accessibility labels
+
 ## Upcoming: AI Memo Summarization
 
 See `docs/ai_memo_feature_detail_design.md` for the full design. Key points:
