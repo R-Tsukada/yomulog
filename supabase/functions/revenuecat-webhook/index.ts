@@ -145,17 +145,18 @@ Deno.serve(async (req: Request) => {
 
     } else if (eventType === 'CANCELLATION') {
       // 解約申請（期限まで有効なので is_subscribed は変更しない）
+      // upsert ではなく update を使うことで、行が存在しない場合の誤 INSERT を防ぐ
       const expiresAt = event.expiration_at_ms
         ? new Date(event.expiration_at_ms as number).toISOString()
         : null;
 
       const { error } = await supabase
         .from('user_profiles')
-        .upsert({
-          user_id:                  appUserId,
+        .update({
           subscription_expires_at:  expiresAt,
           updated_at:               new Date().toISOString(),
-        }, { onConflict: 'user_id' });
+        })
+        .eq('user_id', appUserId);
 
       if (error) {
         console.error('[revenuecat-webhook] DB upsert error:', error);
