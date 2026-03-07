@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, FlatList, Image, TextInput } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 
 type Book = {
   id: string;
@@ -55,7 +56,7 @@ export default function BookList({ books, onBookPress }: Props) {
         {searchActive ? (
           <View className="flex-row items-center gap-2">
             <View className="flex-1 flex-row items-center bg-bg-sub rounded-xl px-3 py-2.5 border border-primary">
-              <Text className="text-primary mr-2 text-sm">🔍</Text>
+              <Ionicons name="search" size={16} color="#3ea8ff" style={{ marginRight: 8 }} />
               <TextInput
                 value={searchText}
                 onChangeText={setSearchText}
@@ -68,7 +69,7 @@ export default function BookList({ books, onBookPress }: Props) {
                   onPress={() => setSearchText('')}
                   className="bg-text-secondary/30 rounded-full w-5 h-5 items-center justify-center"
                 >
-                  <Text className="text-white text-xs">✕</Text>
+                  <Ionicons name="close" size={12} color="#ffffff" />
                 </TouchableOpacity>
               )}
             </View>
@@ -86,7 +87,7 @@ export default function BookList({ books, onBookPress }: Props) {
             onPress={() => setSearchActive(true)}
             className="flex-row items-center bg-bg-sub rounded-xl px-3 py-2.5"
           >
-            <Text className="text-text-secondary mr-2 text-sm">🔍</Text>
+            <Ionicons name="search" size={16} color="#93a5b6" style={{ marginRight: 8 }} />
             <Text className="text-text-secondary text-sm">Search by title or author</Text>
           </TouchableOpacity>
         )}
@@ -158,7 +159,7 @@ export default function BookList({ books, onBookPress }: Props) {
                   />
                 ) : (
                   <View className="w-16 h-24 rounded-md mr-3 bg-border-light items-center justify-center flex-shrink-0">
-                    <Text className="text-3xl">📖</Text>
+                    <Ionicons name="book" size={28} color="#93a5b6" />
                   </View>
                 )}
 
@@ -179,7 +180,7 @@ export default function BookList({ books, onBookPress }: Props) {
                   {/* Status Badge */}
                   <View className="mt-1.5">
                     <View
-                      className={`self-start px-2 py-0.5 rounded-full ${
+                      className={`self-start flex-row items-center gap-1 px-2 py-0.5 rounded-full ${
                         item.status === 'reading'
                           ? 'bg-blue-100'
                           : item.status === 'finished'
@@ -187,6 +188,23 @@ export default function BookList({ books, onBookPress }: Props) {
                           : 'bg-gray-100'
                       }`}
                     >
+                      <Ionicons
+                        name={
+                          item.status === 'reading'
+                            ? 'book-outline'
+                            : item.status === 'finished'
+                            ? 'checkmark-circle'
+                            : 'ellipse-outline'
+                        }
+                        size={12}
+                        color={
+                          item.status === 'reading'
+                            ? '#2563eb'
+                            : item.status === 'finished'
+                            ? '#16a34a'
+                            : '#6b7280'
+                        }
+                      />
                       <Text
                         className={`text-sm font-medium ${
                           item.status === 'reading'
@@ -197,10 +215,10 @@ export default function BookList({ books, onBookPress }: Props) {
                         }`}
                       >
                         {item.status === 'reading'
-                          ? '📖 Reading'
+                          ? 'Reading'
                           : item.status === 'finished'
-                          ? '✅ Finished'
-                          : '📕 Unread'}
+                          ? 'Finished'
+                          : 'Unread'}
                       </Text>
                     </View>
                   </View>

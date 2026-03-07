@@ -52,16 +52,16 @@ describe('BookList', () => {
     render(<BookList books={mockBooks} onBookPress={() => {}} />);
 
     expect(screen.getByText('All')).toBeTruthy();
-    expect(screen.getByText('Reading')).toBeTruthy();
-    expect(screen.getByText('Finished')).toBeTruthy();
-    expect(screen.getByText('Unread')).toBeTruthy();
+    expect(screen.getAllByText('Reading').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('Finished').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('Unread').length).toBeGreaterThan(0);
   });
 
   // --- Test 4: Filter by status ---
   it('filters books when Reading tab is pressed', () => {
     render(<BookList books={mockBooks} onBookPress={() => {}} />);
 
-    fireEvent.press(screen.getByText('Reading'));
+    fireEvent.press(screen.getAllByText('Reading')[0]);
 
     expect(screen.getByText('Clean Code')).toBeTruthy();
     expect(screen.queryByText('The Pragmatic Programmer')).toBeNull();
