@@ -133,13 +133,33 @@ describe('StatsScreen', () => {
     });
   });
 
-  it('shows no books message when there are no finished books', async () => {
+  it('shows year navigation even when there are no finished books', async () => {
     mockUseSubscription.mockReturnValue({ isLoading: false, isSubscribed: true });
     setupBooksQueryMock([]);
 
     render(<StatsScreen />);
     await waitFor(() => {
-      expect(screen.getByText(/読了した本がありません/i)).toBeTruthy();
+      expect(screen.getByText(String(CURRENT_YEAR))).toBeTruthy();
+    });
+  });
+
+  it('shows 0冊 when there are no finished books', async () => {
+    mockUseSubscription.mockReturnValue({ isLoading: false, isSubscribed: true });
+    setupBooksQueryMock([]);
+
+    render(<StatsScreen />);
+    await waitFor(() => {
+      expect(screen.getByText('0冊')).toBeTruthy();
+    });
+  });
+
+  it('shows 0p when there are no finished books', async () => {
+    mockUseSubscription.mockReturnValue({ isLoading: false, isSubscribed: true });
+    setupBooksQueryMock([]);
+
+    render(<StatsScreen />);
+    await waitFor(() => {
+      expect(screen.getByText('0p')).toBeTruthy();
     });
   });
 });

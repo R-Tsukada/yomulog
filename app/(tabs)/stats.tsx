@@ -183,48 +183,40 @@ export default function StatsScreen() {
               </TouchableOpacity>
             </View>
 
-            {books.length === 0 ? (
-              <Text className="text-sm text-text-secondary text-center py-8">
-                まだ読了した本がありません
-              </Text>
-            ) : (
-              <>
-                {/* 年間サマリー */}
-                <View className="flex-row gap-3 mb-6">
-                  <View className="flex-1 bg-bg-sub rounded-xl p-4 items-center">
-                    <Text className="text-2xl font-bold text-primary">{stats.totalCount}冊</Text>
-                    <Text className="text-xs text-text-secondary mt-1">年間読了冊数</Text>
-                  </View>
-                  <View className="flex-1 bg-bg-sub rounded-xl p-4 items-center">
-                    <Text className="text-2xl font-bold text-primary">{stats.totalPages}p</Text>
-                    <Text className="text-xs text-text-secondary mt-1">累計ページ数</Text>
-                  </View>
-                </View>
+            {/* 年間サマリー */}
+            <View className="flex-row gap-3 mb-6">
+              <View className="flex-1 bg-bg-sub rounded-xl p-4 items-center">
+                <Text className="text-2xl font-bold text-primary">{stats.totalCount}冊</Text>
+                <Text className="text-xs text-text-secondary mt-1">年間読了冊数</Text>
+              </View>
+              <View className="flex-1 bg-bg-sub rounded-xl p-4 items-center">
+                <Text className="text-2xl font-bold text-primary">{stats.totalPages}p</Text>
+                <Text className="text-xs text-text-secondary mt-1">累計ページ数</Text>
+              </View>
+            </View>
 
-                {/* 月別テーブル */}
-                <View className="bg-bg-sub rounded-xl overflow-hidden">
-                  <View className="flex-row bg-border-light px-4 py-2">
-                    <Text className="flex-1 text-xs font-semibold text-text-secondary">月</Text>
-                    <Text className="w-16 text-xs font-semibold text-text-secondary text-right">冊数</Text>
-                    <Text className="w-20 text-xs font-semibold text-text-secondary text-right">ページ数</Text>
-                  </View>
-                  {stats.monthly.map((m) => (
-                    <View
-                      key={m.month}
-                      className="flex-row px-4 py-3 border-b border-border-light last:border-0"
-                    >
-                      <Text className="flex-1 text-sm text-text-primary">{MONTH_LABELS[m.month - 1]}</Text>
-                      <Text className="w-16 text-sm text-text-primary text-right">
-                        {m.count > 0 ? `${m.count}冊` : '-'}
-                      </Text>
-                      <Text className="w-20 text-sm text-text-primary text-right">
-                        {m.pages > 0 ? `${m.pages}p` : '-'}
-                      </Text>
-                    </View>
-                  ))}
+            {/* 月別テーブル */}
+            <View className="bg-bg-sub rounded-xl overflow-hidden">
+              <View className="flex-row bg-border-light px-4 py-2">
+                <Text className="flex-1 text-xs font-semibold text-text-secondary">月</Text>
+                <Text className="w-16 text-xs font-semibold text-text-secondary text-right">冊数</Text>
+                <Text className="w-20 text-xs font-semibold text-text-secondary text-right">ページ数</Text>
+              </View>
+              {stats.monthly.map((m) => (
+                <View
+                  key={m.month}
+                  className="flex-row px-4 py-3 border-b border-border-light last:border-0"
+                >
+                  <Text className="flex-1 text-sm text-text-primary">{MONTH_LABELS[m.month - 1]}</Text>
+                  <Text className="w-16 text-sm text-text-primary text-right">
+                    {m.count > 0 ? `${m.count}冊` : '-'}
+                  </Text>
+                  <Text className="w-20 text-sm text-text-primary text-right">
+                    {m.pages > 0 ? `${m.pages}p` : '-'}
+                  </Text>
                 </View>
-              </>
-            )}
+              ))}
+            </View>
           </View>
         )}
       </ScrollView>
