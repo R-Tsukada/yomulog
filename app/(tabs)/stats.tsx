@@ -40,6 +40,7 @@ export default function StatsScreen() {
       .then(({ data, error }) => {
         if (error) {
           console.error('[StatsScreen] Failed to fetch books:', error);
+          setBooks([]);
           return;
         }
         setBooks(data as FinishedBook[]);
