@@ -65,13 +65,14 @@ export function useSubscription() {
     checkSubscription();
 
     // RevenueCat からのリアルタイム更新を受信
+    // Expo Go など未初期化環境では undefined が返る場合があるため optional chaining を使用
     const listener = Purchases.addCustomerInfoUpdateListener((customerInfo) => {
       const isActive = !!customerInfo.entitlements.active[PREMIUM_ENTITLEMENT_ID];
       setState({ status: isActive ? 'subscribed' : 'not_subscribed' });
     });
 
     return () => {
-      listener.remove();
+      listener?.remove();
     };
   }, [session?.user?.id]);
 
