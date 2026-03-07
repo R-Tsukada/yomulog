@@ -127,28 +127,28 @@ export default function AISummarySection({ bookId, userId, notesCount }: Props) 
 
   return (
     <View className="mt-6">
-      <Text className="text-base font-semibold text-text-primary mb-3">AI要約</Text>
+      <Text className="text-lg font-semibold text-text-primary mb-3">AI要約</Text>
 
       {notesCount === 0 && (
-        <Text className="text-sm text-text-secondary mb-3">
+        <Text className="text-base text-text-secondary mb-3">
           メモを追加してからAI整理できます
         </Text>
       )}
 
       {state.status === 'error' && (
-        <Text className="text-sm text-danger mb-3 bg-red-50 p-3 rounded-lg text-center">
+        <Text className="text-base text-danger mb-3 bg-red-50 p-3 rounded-lg text-center">
           しばらく後に再試行してください
         </Text>
       )}
 
       {state.status === 'rate_limited' && (
-        <Text className="text-sm text-text-secondary mb-3 bg-bg-sub p-3 rounded-lg text-center">
+        <Text className="text-base text-text-secondary mb-3 bg-bg-sub p-3 rounded-lg text-center">
           あと{state.retryAfter}秒後に再試行できます
         </Text>
       )}
 
       {state.status === 'conflict' && (
-        <Text className="text-sm text-text-secondary mb-3">
+        <Text className="text-base text-text-secondary mb-3">
           処理中です...
         </Text>
       )}
@@ -177,23 +177,23 @@ export default function AISummarySection({ bookId, userId, notesCount }: Props) 
 
       {state.status === 'success' && (
         <View className="bg-bg-sub rounded-xl p-4">
-          <Text className="text-sm font-medium text-text-secondary mb-1">まとめ</Text>
-          <Text className="text-sm text-text-primary mb-4">{state.data.summary}</Text>
+          <Text className="text-base font-medium text-text-secondary mb-1">まとめ</Text>
+          <Text className="text-base text-text-primary mb-4">{state.data.summary}</Text>
 
           {state.data.learnings.length > 0 && (
             <>
-              <Text className="text-sm font-medium text-text-secondary mb-2">学び</Text>
+              <Text className="text-base font-medium text-text-secondary mb-2">学び</Text>
               {state.data.learnings.map((learning, i) => (
-                <Text key={i} className="text-sm text-text-primary mb-1">・{learning}</Text>
+                <Text key={i} className="text-base text-text-primary mb-1">・{learning}</Text>
               ))}
             </>
           )}
 
           {state.data.quotes.length > 0 && (
             <View className="mt-3">
-              <Text className="text-sm font-medium text-text-secondary mb-2">印象的な言葉</Text>
+              <Text className="text-base font-medium text-text-secondary mb-2">印象的な言葉</Text>
               {state.data.quotes.map((quote, i) => (
-                <Text key={i} className="text-sm text-text-primary italic mb-1">「{quote}」</Text>
+                <Text key={i} className="text-base text-text-primary italic mb-1">「{quote}」</Text>
               ))}
             </View>
           )}

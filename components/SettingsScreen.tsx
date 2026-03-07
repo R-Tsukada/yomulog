@@ -49,7 +49,7 @@ export default function SettingsScreen({ email }: Props) {
         </View>
         <View>
           <Text className="text-base font-bold text-text-primary">Account</Text>
-          <Text className="text-sm text-text-secondary">{email}</Text>
+          <Text className="text-base text-text-secondary">{email}</Text>
         </View>
       </View>
 
@@ -60,8 +60,8 @@ export default function SettingsScreen({ email }: Props) {
             key={i}
             className="flex-row items-center gap-3 py-3.5"
           >
-            <Text className="text-lg w-6 text-center">{item.icon}</Text>
-            <Text className="flex-1 text-sm text-text-primary">{item.label}</Text>
+            <Text className="text-xl w-6 text-center">{item.icon}</Text>
+            <Text className="flex-1 text-base text-text-primary">{item.label}</Text>
             <Text className="text-text-secondary text-base">›</Text>
           </TouchableOpacity>
         ))}

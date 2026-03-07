@@ -61,7 +61,7 @@ export default function BookList({ books, onBookPress }: Props) {
                 onChangeText={setSearchText}
                 placeholder="Search by title or author"
                 autoFocus
-                className="flex-1 text-sm text-text-primary"
+                className="flex-1 text-base text-text-primary"
               />
               {searchText.length > 0 && (
                 <TouchableOpacity
@@ -103,14 +103,14 @@ export default function BookList({ books, onBookPress }: Props) {
             }`}
           >
             <Text
-              className={`text-sm font-medium ${
+              className={`text-base font-medium ${
                 activeTab === tab ? 'text-primary' : 'text-text-secondary'
               }`}
             >
               {tab}
             </Text>
             <Text
-              className={`text-xs opacity-70 ${
+              className={`text-sm opacity-70 ${
                 activeTab === tab ? 'text-primary' : 'text-text-secondary'
               }`}
             >
@@ -128,7 +128,7 @@ export default function BookList({ books, onBookPress }: Props) {
             {searchText ? `No books matching "${searchText}"` : 'No books yet'}
           </Text>
           {!searchText && (
-            <Text className="text-sm text-text-secondary text-center px-8">
+            <Text className="text-base text-text-secondary text-center px-8">
               Tap the Add Book tab to start building your library
             </Text>
           )}
@@ -153,25 +153,25 @@ export default function BookList({ books, onBookPress }: Props) {
                 {item.cover_url ? (
                   <Image
                     source={{ uri: item.cover_url }}
-                    className="w-14 h-20 rounded-md mr-3"
+                    className="w-16 h-24 rounded-md mr-3"
                     resizeMode="cover"
                   />
                 ) : (
-                  <View className="w-14 h-20 rounded-md mr-3 bg-border-light items-center justify-center flex-shrink-0">
-                    <Text className="text-2xl">📖</Text>
+                  <View className="w-16 h-24 rounded-md mr-3 bg-border-light items-center justify-center flex-shrink-0">
+                    <Text className="text-3xl">📖</Text>
                   </View>
                 )}
 
                 {/* Book Info */}
                 <View className="flex-1 min-w-0">
                   <Text
-                    className="text-base font-bold text-text-primary"
+                    className="text-lg font-bold text-text-primary"
                     numberOfLines={2}
                   >
                     {item.title}
                   </Text>
                   {item.author ? (
-                    <Text className="text-sm text-text-secondary mt-0.5">
+                    <Text className="text-base text-text-secondary mt-0.5">
                       {item.author}
                     </Text>
                   ) : null}
@@ -188,7 +188,7 @@ export default function BookList({ books, onBookPress }: Props) {
                       }`}
                     >
                       <Text
-                        className={`text-xs font-medium ${
+                        className={`text-sm font-medium ${
                           item.status === 'reading'
                             ? 'text-blue-600'
                             : item.status === 'finished'
@@ -217,14 +217,14 @@ export default function BookList({ books, onBookPress }: Props) {
                         />
                       </View>
                       <Text
-                        className={`text-xs font-semibold ${
+                        className={`text-sm font-semibold ${
                           pct === 100 ? 'text-green-500' : 'text-primary'
                         }`}
                       >
                         {pct}%
                       </Text>
                     </View>
-                    <Text className="text-xs text-text-secondary mt-1">
+                    <Text className="text-sm text-text-secondary mt-1">
                       {item.current_page} / {item.total_pages}
                     </Text>
                   </View>

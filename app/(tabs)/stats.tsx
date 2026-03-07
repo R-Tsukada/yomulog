@@ -106,15 +106,15 @@ export default function StatsScreen() {
             <Text className="text-xl font-bold text-text-primary mb-2 text-center">
               Premium Feature
             </Text>
-            <Text className="text-sm text-text-secondary text-center mb-8">
+            <Text className="text-base text-text-secondary text-center mb-8">
               Subscribe to unlock your reading statistics
             </Text>
 
             <View className="w-full bg-bg-sub rounded-xl p-4 mb-6">
-              <Text className="text-sm font-semibold text-text-primary mb-3">What's included</Text>
-              <Text className="text-sm text-text-secondary mb-2">· Annual & monthly books finished</Text>
-              <Text className="text-sm text-text-secondary mb-2">· Finished pages count</Text>
-              <Text className="text-sm text-text-secondary">· Year-by-year progress</Text>
+              <Text className="text-base font-semibold text-text-primary mb-3">What's included</Text>
+              <Text className="text-base text-text-secondary mb-2">· Annual & monthly books finished</Text>
+              <Text className="text-base text-text-secondary mb-2">· Finished pages count</Text>
+              <Text className="text-base text-text-secondary">· Year-by-year progress</Text>
             </View>
 
             <TouchableOpacity
@@ -190,31 +190,31 @@ export default function StatsScreen() {
             <View className="flex-row gap-3 mb-6">
               <View className="flex-1 bg-bg-sub rounded-xl p-4 items-center">
                 <Text className="text-2xl font-bold text-primary">{stats.totalCount}</Text>
-                <Text className="text-xs text-text-secondary mt-1">Books Finished</Text>
+                <Text className="text-sm text-text-secondary mt-1">Books Finished</Text>
               </View>
               <View className="flex-1 bg-bg-sub rounded-xl p-4 items-center">
                 <Text className="text-2xl font-bold text-primary">{stats.totalPages}p</Text>
-                <Text className="text-xs text-text-secondary mt-1">Finished Pages</Text>
+                <Text className="text-sm text-text-secondary mt-1">Finished Pages</Text>
               </View>
             </View>
 
             {/* 月別テーブル */}
             <View className="bg-bg-sub rounded-xl overflow-hidden">
               <View className="flex-row bg-border-light px-4 py-2">
-                <Text className="flex-1 text-xs font-semibold text-text-secondary">Month</Text>
-                <Text className="w-16 text-xs font-semibold text-text-secondary text-right">Books</Text>
-                <Text className="w-20 text-xs font-semibold text-text-secondary text-right">Finished Pages</Text>
+                <Text className="flex-1 text-sm font-semibold text-text-secondary">Month</Text>
+                <Text className="w-16 text-sm font-semibold text-text-secondary text-right">Books</Text>
+                <Text className="w-20 text-sm font-semibold text-text-secondary text-right">Finished Pages</Text>
               </View>
               {stats.monthly.map((m) => (
                 <View
                   key={m.month}
                   className="flex-row px-4 py-3 border-b border-border-light last:border-0"
                 >
-                  <Text className="flex-1 text-sm text-text-primary">{MONTH_LABELS[m.month - 1]}</Text>
-                  <Text className="w-16 text-sm text-text-primary text-right">
+                  <Text className="flex-1 text-base text-text-primary">{MONTH_LABELS[m.month - 1]}</Text>
+                  <Text className="w-16 text-base text-text-primary text-right">
                     {m.count > 0 ? m.count : '-'}
                   </Text>
-                  <Text className="w-20 text-sm text-text-primary text-right">
+                  <Text className="w-20 text-base text-text-primary text-right">
                     {m.pages > 0 ? `${m.pages}p` : '-'}
                   </Text>
                 </View>

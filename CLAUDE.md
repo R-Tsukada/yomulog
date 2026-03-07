@@ -2,6 +2,13 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## 実装ルール
+
+- **設計書・計画を提示されても、ユーザーから明示的に「実装して」と依頼されるまで実装を開始しない**
+- 設計レビュー・フィードバック・質問への回答のみ行う
+- 計画モード（EnterPlanMode）を終了した後も、ユーザーの「実装して」という指示を待つ
+- **main ブランチで直接作業しない。実装前に必ず feature ブランチを作成して切り替える**
+
 ## Project Overview
 
 YomuLog is a React Native (Expo) app for tracking reading progress. Users can add books by ISBN barcode scan or manual entry, record page bookmarks, write reading notes, and (upcoming) generate AI summaries of their notes via Gemini.
