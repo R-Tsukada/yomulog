@@ -22,7 +22,7 @@ export default function StatsScreen() {
   const { session } = useAuth();
   const { isLoading: subLoading, isSubscribed, refresh: refreshSub } = useSubscription();
 
-  const [books, setBooks]         = useState<FinishedBook[]>([]);
+  const [books, setBooks]         = useState<FinishedBook[] | null>(null);
   const [dataLoading, setDataLoading] = useState(false);
   const [selectedYear, setSelectedYear] = useState(CURRENT_YEAR);
   const [purchasing, setPurchasing] = useState(false);
@@ -38,17 +38,19 @@ export default function StatsScreen() {
       .eq('status', 'finished')
       .not('finished_at', 'is', null)
       .then(({ data, error }) => {
-        setDataLoading(false);
         if (error) {
           console.error('[StatsScreen] Failed to fetch books:', error);
           return;
         }
-        setBooks((data ?? []) as FinishedBook[]);
+        setBooks(data as FinishedBook[]);
+      })
+      .finally(() => {
+        setDataLoading(false);
       });
   }, [isSubscribed, session?.user?.id]);
 
-  const availableYears = getAvailableYears(books, CURRENT_YEAR);
-  const stats = aggregateByYear(books, selectedYear);
+  const availableYears = getAvailableYears(books ?? [], CURRENT_YEAR);
+  const stats = aggregateByYear(books ?? [], selectedYear);
 
   const handlePurchase = async () => {
     try {
@@ -148,7 +150,7 @@ export default function StatsScreen() {
       <ScrollView className="flex-1 px-4 pt-6" contentContainerStyle={{ paddingBottom: 32 }}>
         <Text className="text-2xl font-bold text-text-primary mb-6">Reading Stats</Text>
 
-        {dataLoading ? (
+        {(dataLoading || books === null) ? (
           <ActivityIndicator size="large" color="#3ea8ff" />
         ) : (
           <View testID="stats-content">
