@@ -127,29 +127,29 @@ export default function AISummarySection({ bookId, userId, notesCount }: Props) 
 
   return (
     <View className="mt-6">
-      <Text className="text-lg font-semibold text-text-primary mb-3">AI要約</Text>
+      <Text className="text-lg font-semibold text-text-primary mb-3">AI Summary</Text>
 
       {notesCount === 0 && (
         <Text className="text-base text-text-secondary mb-3">
-          メモを追加してからAI整理できます
+          Add notes to enable AI summarization
         </Text>
       )}
 
       {state.status === 'error' && (
         <Text className="text-base text-danger mb-3 bg-red-50 p-3 rounded-lg text-center">
-          しばらく後に再試行してください
+          Please try again later
         </Text>
       )}
 
       {state.status === 'rate_limited' && (
         <Text className="text-base text-text-secondary mb-3 bg-bg-sub p-3 rounded-lg text-center">
-          あと{state.retryAfter}秒後に再試行できます
+          Retry available in {state.retryAfter} seconds
         </Text>
       )}
 
       {state.status === 'conflict' && (
         <Text className="text-base text-text-secondary mb-3">
-          処理中です...
+          Processing...
         </Text>
       )}
 
@@ -160,7 +160,7 @@ export default function AISummarySection({ bookId, userId, notesCount }: Props) 
           onPress={handleGenerate}
           disabled={isDisabled}
           accessibilityRole="button"
-          accessibilityLabel={hasSummary ? '再生成する' : 'AIで整理する'}
+          accessibilityLabel={hasSummary ? 'Regenerate' : 'Summarize with AI'}
           className={`rounded-xl py-3 items-center mb-4 ${
             isDisabled ? 'bg-primary/50' : 'bg-primary'
           }`}
@@ -169,7 +169,7 @@ export default function AISummarySection({ bookId, userId, notesCount }: Props) 
             <ActivityIndicator color="#fff" size="small" />
           ) : (
             <Text className="text-white font-bold">
-              {hasSummary ? '再生成する' : 'AIで整理する'}
+              {hasSummary ? 'Regenerate' : 'Summarize with AI'}
             </Text>
           )}
         </TouchableOpacity>
@@ -177,12 +177,12 @@ export default function AISummarySection({ bookId, userId, notesCount }: Props) 
 
       {state.status === 'success' && (
         <View className="bg-bg-sub rounded-xl p-4">
-          <Text className="text-base font-medium text-text-secondary mb-1">まとめ</Text>
+          <Text className="text-base font-medium text-text-secondary mb-1">Summary</Text>
           <Text className="text-base text-text-primary mb-4">{state.data.summary}</Text>
 
           {state.data.learnings.length > 0 && (
             <>
-              <Text className="text-base font-medium text-text-secondary mb-2">学び</Text>
+              <Text className="text-base font-medium text-text-secondary mb-2">Key Learnings</Text>
               {state.data.learnings.map((learning, i) => (
                 <Text key={i} className="text-base text-text-primary mb-1">・{learning}</Text>
               ))}
@@ -191,7 +191,7 @@ export default function AISummarySection({ bookId, userId, notesCount }: Props) 
 
           {state.data.quotes.length > 0 && (
             <View className="mt-3">
-              <Text className="text-base font-medium text-text-secondary mb-2">印象的な言葉</Text>
+              <Text className="text-base font-medium text-text-secondary mb-2">Notable Quotes</Text>
               {state.data.quotes.map((quote, i) => (
                 <Text key={i} className="text-base text-text-primary italic mb-1">「{quote}」</Text>
               ))}

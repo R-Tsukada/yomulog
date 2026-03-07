@@ -71,11 +71,11 @@ describe('AISummarySection', () => {
   });
 
   // 1. ボタン表示
-  it('renders "AIで整理する" button after initial load', async () => {
+  it('renders "Summarize with AI" button after initial load', async () => {
     render(<AISummarySection bookId="book-1" userId="user-1" notesCount={5} />);
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: /AIで整理する/i })).toBeTruthy();
+      expect(screen.getByRole('button', { name: /Summarize with AI/i })).toBeTruthy();
     });
   });
 
@@ -84,7 +84,7 @@ describe('AISummarySection', () => {
     render(<AISummarySection bookId="book-1" userId="user-1" notesCount={0} />);
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: /AIで整理する/i })).toBeDisabled();
+      expect(screen.getByRole('button', { name: /Summarize with AI/i })).toBeDisabled();
     });
   });
 
@@ -93,7 +93,7 @@ describe('AISummarySection', () => {
     render(<AISummarySection bookId="book-1" userId="user-1" notesCount={0} />);
 
     await waitFor(() => {
-      expect(screen.getByText(/メモを追加してからAI整理できます/i)).toBeTruthy();
+      expect(screen.getByText(/Add notes to enable AI summarization/i)).toBeTruthy();
     });
   });
 
@@ -110,23 +110,23 @@ describe('AISummarySection', () => {
     });
   });
 
-  // 5. 既存サマリーありのとき「再生成する」ボタンを表示
-  it('shows "再生成する" button when summary already exists', async () => {
+  // 5. 既存サマリーありのとき「Regenerate」ボタンを表示
+  it('shows "Regenerate" button when summary already exists', async () => {
     setupFetchSummaryMock(mockSummaryData);
 
     render(<AISummarySection bookId="book-1" userId="user-1" notesCount={5} />);
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: /再生成する/i })).toBeTruthy();
+      expect(screen.getByRole('button', { name: /Regenerate/i })).toBeTruthy();
     });
   });
 
   // 6. Edge Function を正しいパラメータで呼ぶ
   it('calls Edge Function with bookId when button is pressed', async () => {
     render(<AISummarySection bookId="book-1" userId="user-1" notesCount={5} />);
-    await waitFor(() => screen.getByRole('button', { name: /AIで整理する/i }));
+    await waitFor(() => screen.getByRole('button', { name: /Summarize with AI/i }));
 
-    fireEvent.press(screen.getByRole('button', { name: /AIで整理する/i }));
+    fireEvent.press(screen.getByRole('button', { name: /Summarize with AI/i }));
 
     await waitFor(() => {
       expect(global.fetch).toHaveBeenCalledWith(
@@ -142,9 +142,9 @@ describe('AISummarySection', () => {
   // 7. 生成成功後にサマリーを表示
   it('displays summary after successful generation', async () => {
     render(<AISummarySection bookId="book-1" userId="user-1" notesCount={5} />);
-    await waitFor(() => screen.getByRole('button', { name: /AIで整理する/i }));
+    await waitFor(() => screen.getByRole('button', { name: /Summarize with AI/i }));
 
-    fireEvent.press(screen.getByRole('button', { name: /AIで整理する/i }));
+    fireEvent.press(screen.getByRole('button', { name: /Summarize with AI/i }));
 
     await waitFor(() => {
       expect(screen.getByText('Test summary')).toBeTruthy();
@@ -162,12 +162,12 @@ describe('AISummarySection', () => {
     });
 
     render(<AISummarySection bookId="book-1" userId="user-1" notesCount={5} />);
-    await waitFor(() => screen.getByRole('button', { name: /AIで整理する/i }));
+    await waitFor(() => screen.getByRole('button', { name: /Summarize with AI/i }));
 
-    fireEvent.press(screen.getByRole('button', { name: /AIで整理する/i }));
+    fireEvent.press(screen.getByRole('button', { name: /Summarize with AI/i }));
 
     await waitFor(() => {
-      expect(screen.getByText(/しばらく後に再試行/i)).toBeTruthy();
+      expect(screen.getByText(/Please try again later/i)).toBeTruthy();
     });
   });
 
@@ -180,12 +180,12 @@ describe('AISummarySection', () => {
     });
 
     render(<AISummarySection bookId="book-1" userId="user-1" notesCount={5} />);
-    await waitFor(() => screen.getByRole('button', { name: /AIで整理する/i }));
+    await waitFor(() => screen.getByRole('button', { name: /Summarize with AI/i }));
 
-    fireEvent.press(screen.getByRole('button', { name: /AIで整理する/i }));
+    fireEvent.press(screen.getByRole('button', { name: /Summarize with AI/i }));
 
     await waitFor(() => {
-      expect(screen.getByText(/45秒後/i)).toBeTruthy();
+      expect(screen.getByText(/Retry available in 45 seconds/i)).toBeTruthy();
     });
   });
 
@@ -194,12 +194,12 @@ describe('AISummarySection', () => {
     (global.fetch as jest.Mock).mockImplementation(() => new Promise(() => {}));
 
     render(<AISummarySection bookId="book-1" userId="user-1" notesCount={5} />);
-    await waitFor(() => screen.getByRole('button', { name: /AIで整理する/i }));
+    await waitFor(() => screen.getByRole('button', { name: /Summarize with AI/i }));
 
-    fireEvent.press(screen.getByRole('button', { name: /AIで整理する/i }));
+    fireEvent.press(screen.getByRole('button', { name: /Summarize with AI/i }));
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: /AIで整理する/i })).toBeDisabled();
+      expect(screen.getByRole('button', { name: /Summarize with AI/i })).toBeDisabled();
     });
   });
 });
