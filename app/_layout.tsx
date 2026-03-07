@@ -1,7 +1,7 @@
 import "../global.css";
 import { useEffect } from "react";
 import { Platform } from "react-native";
-import { Slot, useRouter, useSegments } from "expo-router";
+import { Stack, useRouter, useSegments } from "expo-router";
 import { useAuth } from "../hooks/useAuth";
 import { View, ActivityIndicator } from "react-native";
 import Purchases, { LOG_LEVEL } from "react-native-purchases";
@@ -64,5 +64,5 @@ export default function RootLayout() {
     );
   }
 
-  return <Slot />;
+  return <Stack screenOptions={{ headerShown: false }} />;
 }

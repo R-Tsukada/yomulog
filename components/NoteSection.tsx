@@ -130,7 +130,7 @@ export default function NoteSection({ notes, bookId, userId, onNoteAdded }: Prop
 
   return (
     <View className="mt-6">
-      <Text className="text-base font-semibold text-text-primary mb-3">Notes</Text>
+      <Text className="text-lg font-semibold text-text-primary mb-3">Notes</Text>
 
       {error ? (
         <Text className="text-sm text-danger text-center mb-3 bg-red-50 p-3 rounded-lg">
@@ -146,14 +146,14 @@ export default function NoteSection({ notes, bookId, userId, onNoteAdded }: Prop
             value={page}
             onChangeText={setPage}
             keyboardType="numeric"
-            className="w-20 bg-bg-main rounded-lg p-2.5 text-sm"
+            className="w-20 bg-bg-main rounded-lg p-2.5 text-base"
           />
           <TextInput
             placeholder="Write a note..."
             value={content}
             onChangeText={setContent}
             multiline
-            className="flex-1 bg-bg-main rounded-lg p-2.5 text-sm"
+            className="flex-1 bg-bg-main rounded-lg p-2.5 text-base"
           />
         </View>
         <TouchableOpacity
@@ -168,14 +168,14 @@ export default function NoteSection({ notes, bookId, userId, onNoteAdded }: Prop
           {loading ? (
             <ActivityIndicator color="#fff" size="small" />
           ) : (
-            <Text className="text-white text-sm font-bold">Add Note</Text>
+            <Text className="text-white text-base font-bold">Add Note</Text>
           )}
         </TouchableOpacity>
       </View>
 
       {/* Notes List */}
       {notes.length === 0 ? (
-        <Text className="text-text-secondary text-sm text-center py-4">
+        <Text className="text-text-secondary text-base text-center py-4">
           No notes yet
         </Text>
       ) : (
@@ -193,13 +193,13 @@ export default function NoteSection({ notes, bookId, userId, onNoteAdded }: Prop
                       value={editPage}
                       onChangeText={setEditPage}
                       keyboardType="numeric"
-                      className="w-20 bg-bg-main rounded-lg p-2.5 text-sm"
+                      className="w-20 bg-bg-main rounded-lg p-2.5 text-base"
                     />
                     <TextInput
                       value={editContent}
                       onChangeText={setEditContent}
                       multiline
-                      className="flex-1 bg-bg-main rounded-lg p-2.5 text-sm"
+                      className="flex-1 bg-bg-main rounded-lg p-2.5 text-base"
                     />
                   </View>
                   <View className="flex-row gap-2">
@@ -248,25 +248,25 @@ export default function NoteSection({ notes, bookId, userId, onNoteAdded }: Prop
               ) : (
                 /* Display Mode */
                 <View>
-                  <Text className="text-xs text-primary font-medium mb-1">
+                  <Text className="text-sm text-primary font-medium mb-1">
                     p.{item.page_number}
                   </Text>
-                  <Text className="text-sm text-text-primary mb-2">{item.content}</Text>
+                  <Text className="text-base text-text-primary mb-2">{item.content}</Text>
                   <View className="flex-row gap-2 justify-end items-center">
                     <TouchableOpacity
                       onPress={() => handleToggleBookmark(item.id, item.is_bookmarked ?? false)}
                       accessibilityRole="button"
                       accessibilityLabel={item.is_bookmarked ? 'Remove bookmark' : 'Bookmark note'}
                     >
-                      <Text className={`text-xs font-medium ${item.is_bookmarked ? 'text-primary' : 'text-text-secondary'}`}>
+                      <Text className={`text-lg font-medium ${item.is_bookmarked ? 'text-primary' : 'text-text-secondary'}`}>
                         {item.is_bookmarked ? '★' : '☆'}
                       </Text>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => handleEdit(item)}>
-                      <Text className="text-xs text-primary font-medium">Edit</Text>
+                      <Text className="text-sm text-primary font-medium">Edit</Text>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => setDeletingId(item.id)}>
-                      <Text className="text-xs text-danger font-medium">Delete</Text>
+                      <Text className="text-sm text-danger font-medium">Delete</Text>
                     </TouchableOpacity>
                   </View>
                 </View>

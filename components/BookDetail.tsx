@@ -111,7 +111,7 @@ export default function BookDetail({ book, userId, onBookmarkUpdate, onEdit }: P
         <View className="flex-1">
           <Text className="text-2xl font-bold text-text-primary">{book.title}</Text>
           {book.author ? (
-            <Text className="text-base text-text-secondary mt-1">{book.author}</Text>
+            <Text className="text-lg text-text-secondary mt-1">{book.author}</Text>
           ) : null}
         </View>
         {onEdit ? (
@@ -124,14 +124,14 @@ export default function BookDetail({ book, userId, onBookmarkUpdate, onEdit }: P
       {/* Progress */}
       <View className="mt-6 bg-bg-sub rounded-xl p-4">
         <View className="flex-row justify-between mb-2">
-          <Text className="text-sm text-text-secondary">
+          <Text className="text-base text-text-secondary">
             {book.current_page} / {book.total_pages}
           </Text>
-          <Text className="text-sm font-medium text-primary">
+          <Text className="text-base font-medium text-primary">
             {progressPercent}%
           </Text>
         </View>
-        <View className="h-2 bg-border-light rounded-full overflow-hidden">
+        <View className="h-3 bg-border-light rounded-full overflow-hidden">
           <View
             className="h-full bg-primary rounded-full"
             style={{ width: `${progressPercent}%` }}
@@ -160,7 +160,7 @@ export default function BookDetail({ book, userId, onBookmarkUpdate, onEdit }: P
               disabled={loading}
               className="flex-1 bg-bg-sub rounded-lg py-3 items-center"
             >
-              <Text className="text-sm font-medium text-primary">+{amount}</Text>
+              <Text className="text-base font-medium text-primary">+{amount}</Text>
             </TouchableOpacity>
           ))}
         </View>

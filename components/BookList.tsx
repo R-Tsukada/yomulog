@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, FlatList, Image, TextInput } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 
 type Book = {
   id: string;
@@ -55,20 +56,20 @@ export default function BookList({ books, onBookPress }: Props) {
         {searchActive ? (
           <View className="flex-row items-center gap-2">
             <View className="flex-1 flex-row items-center bg-bg-sub rounded-xl px-3 py-2.5 border border-primary">
-              <Text className="text-primary mr-2 text-sm">🔍</Text>
+              <Ionicons name="search" size={16} color="#3ea8ff" style={{ marginRight: 8 }} />
               <TextInput
                 value={searchText}
                 onChangeText={setSearchText}
                 placeholder="Search by title or author"
                 autoFocus
-                className="flex-1 text-sm text-text-primary"
+                className="flex-1 text-base text-text-primary"
               />
               {searchText.length > 0 && (
                 <TouchableOpacity
                   onPress={() => setSearchText('')}
                   className="bg-text-secondary/30 rounded-full w-5 h-5 items-center justify-center"
                 >
-                  <Text className="text-white text-xs">✕</Text>
+                  <Ionicons name="close" size={12} color="#ffffff" />
                 </TouchableOpacity>
               )}
             </View>
@@ -86,7 +87,7 @@ export default function BookList({ books, onBookPress }: Props) {
             onPress={() => setSearchActive(true)}
             className="flex-row items-center bg-bg-sub rounded-xl px-3 py-2.5"
           >
-            <Text className="text-text-secondary mr-2 text-sm">🔍</Text>
+            <Ionicons name="search" size={16} color="#93a5b6" style={{ marginRight: 8 }} />
             <Text className="text-text-secondary text-sm">Search by title or author</Text>
           </TouchableOpacity>
         )}
@@ -103,14 +104,14 @@ export default function BookList({ books, onBookPress }: Props) {
             }`}
           >
             <Text
-              className={`text-sm font-medium ${
+              className={`text-base font-medium ${
                 activeTab === tab ? 'text-primary' : 'text-text-secondary'
               }`}
             >
               {tab}
             </Text>
             <Text
-              className={`text-xs opacity-70 ${
+              className={`text-sm opacity-70 ${
                 activeTab === tab ? 'text-primary' : 'text-text-secondary'
               }`}
             >
@@ -128,16 +129,20 @@ export default function BookList({ books, onBookPress }: Props) {
             {searchText ? `No books matching "${searchText}"` : 'No books yet'}
           </Text>
           {!searchText && (
-            <Text className="text-sm text-text-secondary text-center px-8">
+            <Text className="text-base text-text-secondary text-center px-8">
               Tap the Add Book tab to start building your library
             </Text>
           )}
         </View>
       ) : (
+        <View className="bg-bg-sub rounded-xl overflow-hidden mt-2">
         <FlatList
           data={filteredBooks}
           keyExtractor={(item) => item.id}
           showsVerticalScrollIndicator={false}
+          ItemSeparatorComponent={() => (
+            <View className="border-b border-border-light" />
+          )}
           renderItem={({ item }) => {
             const pct =
               item.total_pages > 0
@@ -147,31 +152,31 @@ export default function BookList({ books, onBookPress }: Props) {
             return (
               <TouchableOpacity
                 onPress={() => onBookPress(item.id)}
-                className="bg-bg-sub rounded-xl p-4 mb-3 flex-row"
+                className="flex-row p-4"
               >
                 {/* Cover Image */}
                 {item.cover_url ? (
                   <Image
                     source={{ uri: item.cover_url }}
-                    className="w-14 h-20 rounded-md mr-3"
+                    className="w-16 h-24 rounded-md mr-3"
                     resizeMode="cover"
                   />
                 ) : (
-                  <View className="w-14 h-20 rounded-md mr-3 bg-border-light items-center justify-center flex-shrink-0">
-                    <Text className="text-2xl">📖</Text>
+                  <View className="w-16 h-24 rounded-md mr-3 bg-border-light items-center justify-center flex-shrink-0">
+                    <Ionicons name="book" size={28} color="#93a5b6" />
                   </View>
                 )}
 
                 {/* Book Info */}
                 <View className="flex-1 min-w-0">
                   <Text
-                    className="text-base font-bold text-text-primary"
+                    className="text-lg font-bold text-text-primary"
                     numberOfLines={2}
                   >
                     {item.title}
                   </Text>
                   {item.author ? (
-                    <Text className="text-sm text-text-secondary mt-0.5">
+                    <Text className="text-base text-text-secondary mt-0.5">
                       {item.author}
                     </Text>
                   ) : null}
@@ -179,7 +184,7 @@ export default function BookList({ books, onBookPress }: Props) {
                   {/* Status Badge */}
                   <View className="mt-1.5">
                     <View
-                      className={`self-start px-2 py-0.5 rounded-full ${
+                      className={`self-start flex-row items-center gap-1 px-2 py-0.5 rounded-full ${
                         item.status === 'reading'
                           ? 'bg-blue-100'
                           : item.status === 'finished'
@@ -187,8 +192,25 @@ export default function BookList({ books, onBookPress }: Props) {
                           : 'bg-gray-100'
                       }`}
                     >
+                      <Ionicons
+                        name={
+                          item.status === 'reading'
+                            ? 'book-outline'
+                            : item.status === 'finished'
+                            ? 'checkmark-circle'
+                            : 'ellipse-outline'
+                        }
+                        size={12}
+                        color={
+                          item.status === 'reading'
+                            ? '#2563eb'
+                            : item.status === 'finished'
+                            ? '#16a34a'
+                            : '#6b7280'
+                        }
+                      />
                       <Text
-                        className={`text-xs font-medium ${
+                        className={`text-sm font-medium ${
                           item.status === 'reading'
                             ? 'text-blue-600'
                             : item.status === 'finished'
@@ -197,10 +219,10 @@ export default function BookList({ books, onBookPress }: Props) {
                         }`}
                       >
                         {item.status === 'reading'
-                          ? '📖 Reading'
+                          ? 'Reading'
                           : item.status === 'finished'
-                          ? '✅ Finished'
-                          : '📕 Unread'}
+                          ? 'Finished'
+                          : 'Unread'}
                       </Text>
                     </View>
                   </View>
@@ -217,14 +239,14 @@ export default function BookList({ books, onBookPress }: Props) {
                         />
                       </View>
                       <Text
-                        className={`text-xs font-semibold ${
+                        className={`text-sm font-semibold ${
                           pct === 100 ? 'text-green-500' : 'text-primary'
                         }`}
                       >
                         {pct}%
                       </Text>
                     </View>
-                    <Text className="text-xs text-text-secondary mt-1">
+                    <Text className="text-sm text-text-secondary mt-1">
                       {item.current_page} / {item.total_pages}
                     </Text>
                   </View>
@@ -233,6 +255,7 @@ export default function BookList({ books, onBookPress }: Props) {
             );
           }}
         />
+        </View>
       )}
     </View>
   );
