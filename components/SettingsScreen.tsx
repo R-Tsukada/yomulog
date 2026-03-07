@@ -6,19 +6,20 @@ import {
   ActivityIndicator,
   ScrollView,
 } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { supabase } from '../lib/supabase';
 
 type Props = {
   email: string;
 };
 
-const MENU_ITEMS = [
-  { icon: '👤', label: 'Edit Profile' },
-  { icon: '🔔', label: 'Notifications' },
-  { icon: '🎨', label: 'Theme' },
-  { icon: '📤', label: 'Export Data' },
-  { icon: '❓', label: 'Help' },
-  { icon: '📋', label: 'Terms of Service' },
+const MENU_ITEMS: { icon: keyof typeof Ionicons.glyphMap; label: string }[] = [
+  { icon: 'person-outline', label: 'Edit Profile' },
+  { icon: 'notifications-outline', label: 'Notifications' },
+  { icon: 'color-palette-outline', label: 'Theme' },
+  { icon: 'share-outline', label: 'Export Data' },
+  { icon: 'help-circle-outline', label: 'Help' },
+  { icon: 'document-text-outline', label: 'Terms of Service' },
 ];
 
 export default function SettingsScreen({ email }: Props) {
@@ -45,7 +46,7 @@ export default function SettingsScreen({ email }: Props) {
       {/* Profile Section */}
       <View className="flex-row items-center gap-3 pb-5 mb-2 border-b border-border-light">
         <View className="w-14 h-14 rounded-2xl bg-primary items-center justify-center">
-          <Text className="text-3xl">🙂</Text>
+          <Ionicons name="person" size={28} color="#ffffff" />
         </View>
         <View>
           <Text className="text-base font-bold text-text-primary">Account</Text>
@@ -60,9 +61,9 @@ export default function SettingsScreen({ email }: Props) {
             key={i}
             className="flex-row items-center gap-3 py-3.5"
           >
-            <Text className="text-xl w-6 text-center">{item.icon}</Text>
+            <Ionicons name={item.icon} size={22} color="#93a5b6" />
             <Text className="flex-1 text-base text-text-primary">{item.label}</Text>
-            <Text className="text-text-secondary text-base">›</Text>
+            <Ionicons name="chevron-forward" size={18} color="#93a5b6" />
           </TouchableOpacity>
         ))}
       </View>
