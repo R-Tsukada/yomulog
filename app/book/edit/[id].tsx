@@ -1,11 +1,9 @@
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { useState, useCallback } from "react";
 import { ActivityIndicator, View } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import { supabase } from "../../../lib/supabase";
 import EditBookForm from "../../../components/EditBookForm";
-import ScreenWrapper from "../../../components/ScreenWrapper";
-import ScreenHeader from "../../../components/ScreenHeader";
 
 export default function EditBookPage() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -35,13 +33,13 @@ export default function EditBookPage() {
   }
 
   return (
-    <ScreenWrapper>
-      <ScreenHeader title="Edit Book" onBack={() => router.back()} />
+    <View className="flex-1 bg-bg-main px-6">
+      <Stack.Screen options={{ title: 'Edit Book' }} />
       <EditBookForm
         book={book}
         onSuccess={() => router.back()}
         onDelete={() => router.replace("/(tabs)")}
       />
-    </ScreenWrapper>
+    </View>
   );
 }

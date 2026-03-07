@@ -1,4 +1,4 @@
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { useState, useCallback } from "react";
 import { ActivityIndicator, View, ScrollView, KeyboardAvoidingView, Platform } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
@@ -8,8 +8,6 @@ import BookDetail from "../../components/BookDetail";
 import NoteSection from "../../components/NoteSection";
 import AISummarySection from "../../components/AISummarySection";
 import ExportNotesButton from "../../components/ExportNotesButton";
-import ScreenWrapper from "../../components/ScreenWrapper";
-import ScreenHeader from "../../components/ScreenHeader";
 
 export default function BookDetailPage() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -56,15 +54,11 @@ export default function BookDetailPage() {
   }
 
   return (
-    <ScreenWrapper>
-      <ScreenHeader
-        title="Book Detail"
-        onBack={() => router.back()}
-      />
+    <View className="flex-1 bg-bg-main px-6">
+      <Stack.Screen options={{ title: 'Book Detail' }} />
       <KeyboardAvoidingView
         className="flex-1"
         behavior={Platform.OS === "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 10 : 0}
       >
         <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
           <BookDetail
@@ -91,6 +85,6 @@ export default function BookDetailPage() {
           <View className="h-32" />
         </ScrollView>
       </KeyboardAvoidingView>
-    </ScreenWrapper>
+    </View>
   );
 }
