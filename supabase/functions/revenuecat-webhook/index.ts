@@ -83,7 +83,12 @@ Deno.serve(async (req: Request) => {
     return jsonResponse(400, { error: 'missing_required_fields' });
   }
 
-  console.log('[revenuecat-webhook] event:', eventType, 'user:', appUserId);
+  const userHashBytes = await crypto.subtle.digest('SHA-256', encoder.encode(appUserId));
+  const userHash = Array.from(new Uint8Array(userHashBytes))
+    .map(b => b.toString(16).padStart(2, '0'))
+    .join('')
+    .slice(0, 8);
+  console.log('[revenuecat-webhook] event:', eventType, 'user_hash:', userHash);
 
   // ==================== Supabase クライアント（Service Role） ====================
 
